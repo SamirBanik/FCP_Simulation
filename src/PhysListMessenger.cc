@@ -3,7 +3,6 @@
 //  File:        PhysListMessenger.cc                                 //
 //  Description: A PhysicsList messenger to specify Mass and Charge   //
 //               of FCPs                                              //
-//  Author:      Varchaswi K. S. Kashyap                              //
 //  Date:        December 21, 2019                                    //
 //                                                                    //
 ////////////////////////////////////////////////////////////////////////
