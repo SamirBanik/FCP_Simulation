@@ -1,0 +1,112 @@
+////////////////////////////////////////////////////////////////////////
+//                                                                    //
+//  File:        CDMSPhysListMessenger.cc                             //
+//  Description: Macro commands to select and customize physics lists //
+//		 at run time (before /run/initialize).		      //
+//                                                                    //
+//  Author:      Michael Kelsey                                       //
+//  Date:        1 July 2015                                          //
+//                                                                    //
+//  20180317  Add command to select FCP physics.             //
+////////////////////////////////////////////////////////////////////////
+
+#include "CDMSPhysListMessenger.hh"
+//#include "G4UIParameter.hh"
+#include "G4UIcommand.hh"
+#include "CDMSPhysicsList.hh"
+#include <sstream>
+
+// #include "G4UIcmdWithABool.hh"
+#include "G4UIcmdWithAString.hh"
+// #include "G4UIcmdWithoutParameter.hh"
+// #include "G4UIcmdWithADouble.hh"
+// #include "G4UIcmdWithADoubleAndUnit.hh"
+
+// Constructor and destructor
+
+CDMSPhysListMessenger::CDMSPhysListMessenger(CDMSPhysicsList* PhyList)
+  : thePhysicsList(PhyList), LIPCmd(0)
+{
+  //LIPCmd = new G4UIcmdWithAString("/FCP/Physics/ParticleProperties",this);
+  LIPCmd = new G4UIcommand("/FCP/Physics/ParticleProperties",this);
+  LIPCmd->SetGuidance("Setup particle properties");
+  
+  G4UIparameter* q = new G4UIparameter("charge",'d',false);
+  q->SetGuidance("Electric charge");
+  q->SetDefaultValue("0.02");
+  LIPCmd->SetParameter(q);
+  //                                                                                                                                                                                                        
+  G4UIparameter* mass = new G4UIparameter("mass",'d',false);
+  mass->SetGuidance("mass");
+  mass->SetParameterRange("mass>0.");
+  mass->SetDefaultValue("100");
+  LIPCmd->SetParameter(mass);
+  //                                                                                                                                                                                                        
+  G4UIparameter* unit = new G4UIparameter("unit",'s',false);
+  LIPCmd->SetParameter(unit);
+  unit->SetDefaultValue("MeV");
+  LIPCmd->AvailableForStates(G4State_PreInit);
+}
+
+CDMSPhysListMessenger::~CDMSPhysListMessenger() {
+  delete LIPCmd;
+}
+
+
+// Register user-specified physics list
+
+// G4String CDMSPhysListMessenger::GetCurrentValue(G4UIcommand *cmd) {
+//   if (cmd == PLCmd || cmd == PLTopCmd) return theFactory->LastPhysicsListName();
+
+//   if (cmd == EMCmd) return theFactory->LastEMPhysicsName();
+
+//   return CDMSMessengerBase::GetCurrentValue(cmd);
+// }
+
+void CDMSPhysListMessenger::SetNewValue(G4UIcommand* command,
+                                          G4String newValue)
+{
+  if (command == LIPCmd)
+   { G4double q, mass;
+     G4String unts;
+     std::istringstream is(newValue);
+     is >> q >> mass >> unts;
+     G4String unit = unts;
+     G4double vUnit = G4UIcommand::ValueOf(unit);
+     // fPhys->SetMagneticCharge(m);
+     // fPhys->SetElectricCharge(q);
+     // fPhys->SetMonopoleMass(mass*vUnit);
+
+     //if (vals.empty()) thePhysicsList->AddLIPsPhysics();
+     //else if (vals.size() == 1) thePhysicsList->AddLIPsPhysics(vals[0]);
+     //else
+     thePhysicsList->AddFCPPhysics(q,mass*vUnit);
+   }
+}
+
+
+
+// void CDMSPhysListMessenger::SetNewValue(G4UIcommand* cmd, G4String value) {
+//   CDMSMessengerBase::SetNewValue(cmd, value);
+
+//   // if (cmd == PLCmd || cmd == PLTopCmd) theFactory->SetPhysicsList(value);
+//   // if (cmd == EMCmd) theFactory->SetEMPhysics(value);
+
+//   // if (cmd == BiasCmd) {
+//   //   theFactory->SetBiasingFactor(BiasCmd->GetNewStringValue(value),
+//   // 				 BiasCmd->GetNewDoubleValue(value));
+//   // }
+
+//   // if (cmd == PrintCmd) theFactory->ShowSettings(G4cout);
+
+//   if (cmd == LIPCmd) {
+//     // Units only apply to second numeric value (mass), not first (charge)
+//     const std::vector<G4double>& vals = LIPCmd->GetNewListRawValue(value);
+//     G4double unit = LIPCmd->GetNewUnitValue(value);
+
+//     if (vals.empty()) thePhysicsList->AddLIPsPhysics();
+//     else if (vals.size() == 1) thePhysicsList->AddLIPsPhysics(vals[0]);
+//     else thePhysicsList->AddLIPsPhysics(vals[0], vals[1]*unit);
+//   }
+// }
+
