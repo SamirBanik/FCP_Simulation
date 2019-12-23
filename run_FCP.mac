@@ -1,0 +1,9 @@
+/run/initialize
+/control/saveHistory
+/tracking/verbose 0
+/control/verbose 2
+/gun/particle FCP-
+/process/list
+/gun/energy 225.73 MeV
+/run/verbose 2
+/run/beamOn 10000000
