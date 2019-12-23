@@ -1,1 +1,8 @@
+################################################################################################################################
+############ A GEANT4 based framework to simulate Fractionally Charged Particles ###############################################
+################################################################################################################################
+The repository contains source codes to simulate passage of Fractionally Charged Particles through any typical detectot material. The "src" directory has all the files with .cc extension and the
+"include" directory has the corressponding header files with .hh extension. A full apllication with a very simplified detector geometry, a GNUmakefile, the main function and a macro is given to run a
+test simulation. User must define his or her own simulation geometry.
+
 samir.banik@niser.ac.in
